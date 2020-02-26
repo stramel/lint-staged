@@ -65,16 +65,6 @@ describe('gitWorkflow', () => {
     }
   })
 
-  describe('hasPatch', () => {
-    it('should return false when patch file not found', async () => {
-      const gitWorkflow = new GitWorkflow({
-        gitDir: cwd,
-        gitConfigDir: path.resolve(cwd, './.git')
-      })
-      expect(await gitWorkflow.hasPatch('foo')).toEqual(false)
-    })
-  })
-
   describe('dropBackup', () => {
     it('should handle errors', async () => {
       const gitWorkflow = new GitWorkflow({
@@ -89,21 +79,6 @@ describe('gitWorkflow', () => {
         gitError: true,
         gitGetBackupStashError: true
       })
-    })
-  })
-
-  describe('cleanUntrackedFiles', () => {
-    it('should remove untracked files', async () => {
-      const tempFile = path.resolve(cwd, 'tempFile')
-      await fs.writeFile(tempFile, 'Hello')
-
-      const gitWorkflow = new GitWorkflow({
-        gitDir: cwd,
-        gitConfigDir: path.resolve(cwd, './.git')
-      })
-
-      await gitWorkflow.cleanUntrackedFiles()
-      await expect(fs.access(tempFile)).rejects.toThrow('ENOENT')
     })
   })
 })

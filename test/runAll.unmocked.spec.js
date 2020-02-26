@@ -519,11 +519,7 @@ describe('runAll', () => {
     expect(await execGit(['log', '-1', '--pretty=%B'])).toMatch('commit a')
 
     // Merge second branch, causing merge conflict
-    try {
-      await execGit(['merge', 'branch-b'])
-    } catch (error) {
-      expect(error.message).toMatch('Merge conflict in test.js')
-    }
+    await expect(execGit(['merge', 'branch-b'])).rejects.toThrowError('Merge conflict in test.js')
 
     expect(await readFile('test.js')).toMatchInlineSnapshot(`
       "<<<<<<< HEAD
@@ -715,11 +711,10 @@ describe('runAll', () => {
       LOG Running tasks for *.js [completed]
       LOG Running tasks... [completed]
       LOG Applying modifications... [started]
-      LOG Applying modifications... [failed]
-      LOG → lint-staged automatic backup is missing!
+      LOG Applying modifications... [completed]
       LOG Cleaning up... [started]
-      LOG Cleaning up... [skipped]
-      LOG → Skipped because of previous git error."
+      LOG Cleaning up... [failed]
+      LOG → lint-staged automatic backup is missing!"
     `)
   })
 
